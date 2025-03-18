@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Use a smaller base image
+FROM python:3.9-slim-buster AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,10 +8,19 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 
 # Install any needed dependencies
-RUN pip3 install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . /app
+
+# Use a minimal image for the final stage
+FROM python:3.9-slim-buster
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy only the necessary files from the build stage
+COPY --from=build /app /app
 
 # Expose the port the app will run on (adjust if needed)
 EXPOSE 5000
