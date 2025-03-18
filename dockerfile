@@ -1,11 +1,23 @@
-# Use the FastChat image as the base
-FROM ghcr.io/lm-sys/fastchat:latest
+# Use the official base image (adjust this based on your specific needs)
+FROM ubuntu:20.04
 
-# Expose the port (7860 in this case)
-EXPOSE 7860
+# Install necessary dependencies (e.g., curl, Python, etc.)
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl
 
-# Set the default PORT environment variable (Koyeb sets its own, but this provides a fallback)
-ENV PORT=7860
+# Set the working directory
+WORKDIR /app
 
-# Run FastChat, binding to all interfaces on the PORT
-CMD ["fastchat", "serve", "--model-name", "alpaca-7b", "--device", "cpu", "--host", "0.0.0.0", "--port", "7860"]
+# Copy your application files to the container
+COPY . /app
+
+# Install Python dependencies if needed (example)
+RUN pip3 install -r requirements.txt
+
+# Expose the port your app will run on (adjust this based on your app)
+EXPOSE 8000
+
+# Set the default command to run when the container starts
+CMD ["python3", "app.py"]
