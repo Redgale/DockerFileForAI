@@ -1,23 +1,20 @@
-# Use the official base image (adjust this based on your specific needs)
-FROM ubuntu:20.04
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# Install necessary dependencies (e.g., curl, Python, etc.)
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    curl
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy your application files to the container
+# Copy the requirements.txt file into the container at /app
+COPY requirements.txt /app/requirements.txt
+
+# Install any needed dependencies
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
+
+# Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install Python dependencies if needed (example)
-RUN pip3 install -r requirements.txt
+# Expose the port the app will run on (adjust if needed)
+EXPOSE 5000
 
-# Expose the port your app will run on (adjust this based on your app)
-EXPOSE 8000
-
-# Set the default command to run when the container starts
-CMD ["python3", "app.py"]
+# Command to run the app (adjust if needed)
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
