@@ -25,5 +25,5 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build --no-cache --progress=plain -t ghcr.io/${{ github.repository_owner }}/dockefileforai:latest .
-        docker push ghcr.io/${{ github.repository_owner }}/dockefileforai:latest
+        docker build --no-cache --progress=plain -t ghcr.io/redgale/dockefileforai:latest .
+        docker push ghcr.io/redgale/dockefileforai:latest
